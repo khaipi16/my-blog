@@ -13,6 +13,7 @@ export const Home = () => {
                 </div>
                 <div className={styles.descript}>
                     <p>Today marks a new beginning yet again, here we go again</p>
+                    Testing a new changeß
                 </div>
                 <div className={styles.readMore}>
                     <button >Read More</button>
