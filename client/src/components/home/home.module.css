@@ -1,0 +1,38 @@
+
+.container {
+    margin-top: 30px;
+}
+
+.title {
+    color: red;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+}
+
+.imgContainer {
+    justify-content: center;
+    /* margin-left: 100px; */
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    margin-right: 100px;
+}
+
+.descript {
+    margin-left: 35px;
+    display: flex;
+    justify-content: center;
+    color: blue;
+}
+
+.readMore {
+    padding: 16px 20px;
+    border: none;
+    border-radius: 5px;
+    width: max-content;
+    cursor: pointer;
+
+}
