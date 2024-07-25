@@ -1,9 +1,12 @@
-import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/navbar/Navbar';
-import { Home } from './components/home/Home';
-import {WriteBlog} from './components/blogs/WriteBlog'
-import { Login } from './components/login/Login';
+import { Home } from './components/pages/home/Home';
+import { WriteBlog } from './components/blogs/WriteBlog'
+import { Login } from './components/pages/login/Login';
+import SingleBlog from './components/pages/single-blog/BlogPage';
+import Timeline from './components/pages/timeline/Timeline';
+import Register from './components/pages/login/Register';
 
 function App() {
   return (
@@ -11,8 +14,11 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/blogs/:id" element={<SingleBlog />} />
+        <Route path="/recent-blogs" element={<Timeline />} />
         <Route path="/write" element={<WriteBlog />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
 

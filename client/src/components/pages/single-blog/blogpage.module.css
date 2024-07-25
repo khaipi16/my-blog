@@ -1,0 +1,32 @@
+
+.blogContainer {
+    min-height: 100vh;
+    margin: 20px;
+    margin-top: 90px;
+    border-width: 10px;
+    border-color: red;
+}
+
+.title {
+    margin-top: 60px;
+    text-align: center;
+
+}
+
+.author {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.content {
+    margin-top: 7px;
+    text-align: center;
+    
+}
+
+
+.content li {
+    align-items: start; /* Aligns items to the top if text wraps */
+}
+
+/* elevation={3} style={{ padding: '20px', margin: '20px' }} */
