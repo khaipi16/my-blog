@@ -1,4 +1,4 @@
-.container {
+/* .container {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -29,7 +29,34 @@
     text-align: center;
     font-size: 36px;
     font-weight: bold;
-}
+} */
+
+
+
+.menu {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    color: red;
+  }
+  
+  .item {
+    margin-right: 20px;
+    z-index: 10000px;
+  }
+  
+  .link {
+    color: #fff; /* Text color */
+    text-decoration: none;
+    transition: color 0.3s; /* Smooth color transition */
+  }
+  
+  .link:hover {
+    color: #ff6600; /* Hover color */
+  }
+  
+
 
 @media screen and (max-width:1280px) {
     .name {

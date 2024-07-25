@@ -1,26 +1,53 @@
 import React from 'react'
 import styles from './navbar.module.css'
 import {NavLink} from 'react-router-dom'
-// import SelectTheme from '../selectTheme/SelectTheme'
-// import AuthLinks from '../authLinks/AuthLinks'
+import { useEffect } from 'react'
+import { useUser } from '../../UserContext'
 
 
 const Navbar = () => {
-    return (
-        <div className={styles.container}>
-            <div className={styles.social}>
-            </div>
-            <div className={styles.name}>Khai Pi</div>
-            <div className={styles.links}>
-                <NavLink to="/" className={styles.link}>Home</NavLink>
-                <NavLink to="/write" className={styles.link}>Write</NavLink>
-                <NavLink to="/contact" className={styles.link}>Contact</NavLink>
-                <NavLink to="/about" className={styles.link}>About</NavLink>
-                <NavLink to="/login" className={styles.link}>Login</NavLink>
-            </div>
 
-        
-        </div>
+    const { userData, logout } = useUser(); // Get userData and logout function from context
+
+    const handleLogout = () => {
+        logout(); // Call logout method from context
+    }
+
+    return (
+        <nav className='navbar navbar-expand-lg navbar-dark bg-dark'> { /* shading and configurations for the navbar itself */}
+            <div className='container'>
+                <div className='left-container'>
+                        {userData ? (
+                            <div>
+                            <NavLink onClick={handleLogout} to="/login" className={styles.link}>Logout</NavLink>
+                            <span>|</span>
+                            <NavLink to="/" className='navbar-brand'>| My Blog</NavLink>
+                            </div>
+                        ) : (
+    
+                            <div>
+                            <NavLink to="/login" className={styles.link}>Login</NavLink>
+                            <span>|</span>
+                            <NavLink to="/" className='navbar-brand'>| My Blog</NavLink>
+                            </div>
+                        )}
+                </div>
+                <ul className={styles.menu}>
+                    <li className={styles.item}>
+                        <NavLink to='/write' className={styles.link}>Write</NavLink>
+                    </li>
+                    <li className={styles.item}>
+                        <NavLink to='/recent-blogs' className={styles.link}>Recent Blogs</NavLink>
+                    </li>
+                    <li className={styles.item}>
+                        <NavLink to='/projects' className={styles.link}>Projects</NavLink>
+                    </li>
+                    <li className={styles.item}>
+                        <NavLink to="/about" className={styles.link}>About</NavLink>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     )
 }
 

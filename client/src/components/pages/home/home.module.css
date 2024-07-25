@@ -1,0 +1,110 @@
+.container {
+    margin-top: 30px;
+    display: flex;
+    
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    padding: 10px;
+}
+
+.home {
+    display: grid;
+    grid-template-columns: 1fr .75fr;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    margin: 20px;
+    min-height: 100vh;
+    height: auto;
+    width: auto;
+}
+
+.profile {
+    margin-bottom: 13px;
+    max-width: 55%;
+    max-height: 55%;
+    border-radius: 50%;
+    overflow: hidden; 
+  }
+
+  .profileInfo {
+    margin-left: 30px;
+  }
+
+  .user {
+    text-align: center;
+    width: 50%;
+  }
+
+  .author {
+    /* display: flex; */
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+.title {
+    font-size: 56px;
+    /* padding: 0 10px; */
+    margin-bottom: 30px;
+}
+
+.separator {
+    margin: 0px 10px;
+    line-height: 2;
+    font-size: 25px;
+    vertical-align: middle;
+}
+
+.blogContainer {
+    margin-top: 20px;
+    
+}
+
+.content {
+    /* margin-top: 500px; */
+}
+
+
+.readMore {
+    margin-top: 30px;
+    /* padding: 16px 20px; */
+    border: none;
+    border-radius: 5px;
+    width: max-content;
+    cursor: pointer;
+}
+
+
+@media screen and (max-width: 1280px) {
+    .title {
+        font-size: 45px;
+    }    
+}
+
+@media screen and (max-width: 1024px) {
+    .title {
+        font-size: 32px;
+    }
+
+    .imgContainer {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .title {
+        font-size: 25px;
+    } 
+}
+
+@media screen and (max-width: 640px) {
+    .title {
+        font-size: 18pxpx;
+    }
+}
