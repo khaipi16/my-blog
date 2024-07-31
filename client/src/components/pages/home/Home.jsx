@@ -5,14 +5,14 @@ import DomPurify from 'dompurify'
 import profilePic from '../../../images/profile.jpg';
 import { Button, Paper, Typography } from "@mui/material";
 import { Link } from 'react-router-dom'
+import API_URL from '../../../config';
 
 export const Home = () => {
     const[blog, setBlog] = useState(null);
 
 
     useEffect(() => {
-        const blog_url = "https://my-blog-subo.onrender.com/blogs/latest"
-        const blog_url1 = 'http://127.0.0.1:5000/blogs/latest';
+        const blog_url = `${API_URL}/blogs/latest`
         const blog_url2 = 'https://52.91.80.202:5000/blogs/latest';
 
         fetch(blog_url)

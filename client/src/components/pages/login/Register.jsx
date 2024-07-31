@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import styles from "./login.module.css";
+import API_URL from '../../../config';
+
 
 const Register = () => {
     const [firstName, setFirstName] = useState('');
@@ -13,7 +15,7 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        const register_url = 'http://127.0.0.1:5000/register';
+        const register_url = `${API_URL}/register`;
         const register_url2 = 'https://52.91.80.202:5000/register'
 
         try {

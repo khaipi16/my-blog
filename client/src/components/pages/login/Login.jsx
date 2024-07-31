@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { useUser } from '../../../UserContext';
 import styles from '../login/login.module.css'
+import API_URL from '../../../config';
 
 
 
@@ -14,7 +15,7 @@ export const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        const login_url = 'http://127.0.0.1:5000/login';
+        const login_url = `${API_URL}/login`;
         const login_url2 = 'https://52.91.80.202:5000/login';
 
         const response = await fetch(login_url, {

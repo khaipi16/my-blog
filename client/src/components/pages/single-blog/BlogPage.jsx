@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Paper, Typography } from '@mui/material';
 import styles from './blogpage.module.css';
 import DOMPurify from 'dompurify';
+import API_URL from '../../../config';
+
 
 const BlogPage = () => {
 
@@ -11,7 +13,7 @@ const BlogPage = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        const blog_url = `http://127.0.0.1:5000/blogs/${id}`;
+        const blog_url = `${API_URL}/blogs/${id}`;
         const blog_url2 = `https://52.91.80.202:5000/blogs/${id}`;
 
         fetch(blog_url)

@@ -3,6 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styles from '../blogs/write.module.css';
 import { Navigate } from 'react-router-dom';
+import API_URL from '../../config';
 
 export const WriteBlog = () => {
     const [title, setTitle] = useState('');
@@ -20,7 +21,7 @@ export const WriteBlog = () => {
           alert("You must be logged in to post a blog.");
           return;
         }
-        const blog_url = 'http://127.0.0.1:5000/write';
+        const blog_url = `${API_URL}/write`;
         const blog_url2 = 'https://52.91.80.202:5000/write';
 
         const data = JSON.stringify({
