@@ -14,7 +14,7 @@ export const WriteBlog = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+      
         const token = localStorage.getItem('token')
         if(!token) {
           alert("You must be logged in to post a blog.");
