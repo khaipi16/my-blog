@@ -11,7 +11,8 @@ export const Home = () => {
 
 
     useEffect(() => {
-        const blog_url = 'http://127.0.0.1:5000/blogs/latest';
+        const blog_url = "https://my-blog-subo.onrender.com/blogs/latest"
+        const blog_url1 = 'http://127.0.0.1:5000/blogs/latest';
         const blog_url2 = 'https://52.91.80.202:5000/blogs/latest';
 
         fetch(blog_url)
