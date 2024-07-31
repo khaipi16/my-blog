@@ -5,7 +5,7 @@ from flask import Blueprint, make_response, request, jsonify
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
-# from models.blog import Blog
+from models.blog import Blog
 from models.user import User
 from service.blog_service import BlogService
 
