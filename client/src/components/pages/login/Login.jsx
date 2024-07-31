@@ -15,6 +15,7 @@ export const Login = () => {
         e.preventDefault();
 
         const login_url = 'http://127.0.0.1:5000/login';
+        const login_url2 = 'https://52.91.80.202:5000/login';
         const response = await fetch(login_url, {
             method: 'POST',
             body: JSON.stringify({username, password}),

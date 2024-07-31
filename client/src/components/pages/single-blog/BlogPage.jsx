@@ -13,6 +13,8 @@ const BlogPage = () => {
     useEffect(() => {
         const blog_url = `http://127.0.0.1:5000/blogs/${id}`;
 
+        const blog_url2 = `https://52.91.80.202:5000/blogs/${id}`;
+
         fetch(blog_url)
             .then(response => response.json())
                 .then(BlogData => {

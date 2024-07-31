@@ -60,6 +60,8 @@ const Timeline = () => {
 
     useEffect(() => {
         const blog_url = 'http://127.0.0.1:5000/blogs';
+
+        const blog_url2 = 'https://52.91.80.202:5000/blogs';
         fetch(blog_url)
             .then(response => response.json())
                 .then(blogData => {
@@ -83,8 +85,9 @@ const Timeline = () => {
             alert("You must be logged in to delete a blog.");
             return;
         }
+        const delete_url = `http://127.0.0.1:5000/delete/${id}`;
+        const delete_url2 = `https://52.91.80.202:5000/delete/${id}`
 
-        const delete_url = `http://127.0.0.1:5000/delete/${id}`
         fetch(delete_url, {
             method: 'DELETE',
         })

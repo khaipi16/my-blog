@@ -13,7 +13,9 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        const register_url = 'http://127.0.0.1:5000/register'
+        const register_url = 'http://127.0.0.1:5000/register';
+        const register_url2 = 'https://52.91.80.202:5000/register'
+
         try {
             const response = await fetch(register_url, {
                 method: 'POST',
