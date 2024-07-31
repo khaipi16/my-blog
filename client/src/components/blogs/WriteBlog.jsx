@@ -14,14 +14,15 @@ export const WriteBlog = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+      
         const token = localStorage.getItem('token')
         if(!token) {
           alert("You must be logged in to post a blog.");
           return;
         }
-        
         const blog_url = 'http://127.0.0.1:5000/write';
+        const blog_url2 = 'https://52.91.80.202:5000/write';
+
         const data = JSON.stringify({
             title,
             author,
