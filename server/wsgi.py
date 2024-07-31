@@ -22,7 +22,7 @@ app_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'app'))
 sys.path.insert(0, app_path)
 
 print(f"Python path: {sys.path}")  # Debugging print to check the path
-from app import app
+from app.app import app
 
 if __name__ == "__main__":
     app.run()
