@@ -17,7 +17,8 @@ jwt = JWTManager(app)
 # Register Blueprints
 app.register_blueprint(blog_bp)
 
-frontend_folder = os.path.join(os.getcwd(), "../", "client")
+# frontend_folder = os.path.join(os.getcwd(), "../", "client")
+frontend_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../frontend/build")
 build_folder = os.path.join(frontend_folder, "build")
 
 # Serve static files from 'build' folder under 'client' directory
