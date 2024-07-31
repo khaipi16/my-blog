@@ -6,10 +6,8 @@ from flask_jwt_extended import JWTManager
 
 
 app = Flask(__name__)
-origins = ["http://localhost:3000", "http://khai-blog-client.s3-website-us-east-1.amazonaws.com/"]
-# CORS(app, supports_credentials=True, origins=origins[0])
-# CORS(app)
-CORS(app, supports_credentials=True, origins="https://my-blog-subo.onrender.com")
+origins = ["http://localhost:3000", "http://khai-blog-client.s3-website-us-east-1.amazonaws.com/", "https://my-blog-subo.onrender.com", "https://khaipi.com"]
+CORS(app, supports_credentials=True, origins=origins)
 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
