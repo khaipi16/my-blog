@@ -9,6 +9,7 @@ app = Flask(__name__)
 origins = ["http://localhost:3000", "http://khai-blog-client.s3-website-us-east-1.amazonaws.com/"]
 # CORS(app, supports_credentials=True, origins=origins[0])
 CORS(app)
+# CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
