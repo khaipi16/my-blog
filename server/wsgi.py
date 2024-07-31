@@ -13,8 +13,13 @@ point the server to this file, e.g., using the command:
 For more information on deploying Flask applications with WSGI servers,
 refer to the Flask deployment documentation.
 """
+import os
+import sys
 
-from app.app import app
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'app')))
+
+from app import app
 
 if __name__ == "__main__":
     app.run()
