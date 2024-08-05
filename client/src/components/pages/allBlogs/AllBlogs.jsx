@@ -5,19 +5,25 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import DOMPurify from 'dompurify';
 import { useUser } from '../../../UserContext';
-import API_URL from '../../../config';
 // import DEV_URL from '../../../config';
-import styles from './timeline.module.css';
+import API_URL from '../../../config';
 
-const Timeline = () => {
+import styles from './allBlogs.module.css';
+
+const AllBlogs = () => {
     const [expandYear, setExpandYear] = useState(null);
     const [expandMonth, setExpandMonth] = useState(null);
     const [blogs, setBlogs] = useState({});
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [filteredBlogs, setFilteredBlogs] = useState({});
+    const [filterOpen, setFilterOpen] = useState(false);
     const { token } = useUser();
+
+    const categories = ["Technology", "Health", "Lifestyle", "Education"];
 
     const handleExpandYear = (panel) => (event, isExpanded) => {
         setExpandYear(isExpanded ? panel : null);
@@ -53,7 +59,7 @@ const Timeline = () => {
     };
 
     useEffect(() => {
-        const blog_url = `${API_URL}/blogs`;
+        const blog_url = `${DEV_URL}/blogs`;
         fetch(blog_url)
             .then(response => response.json())
             .then(blogData => {
@@ -68,12 +74,46 @@ const Timeline = () => {
             .catch(error => console.error('Failed to fetch blogs:', error));
     }, []);
 
+    useEffect(() => {
+        const filterBlogs = () => {
+            if (!selectedCategories.length && !searchTerm) {
+                setFilteredBlogs(blogs);
+                return;
+            }
+
+            const filtered = {};
+            Object.keys(blogs).forEach(year => {
+                Object.keys(blogs[year]).forEach(month => {
+                    const matchingBlogs = blogs[year][month].filter(blog => {
+                        const matchesCategory = selectedCategories.length
+                            ? selectedCategories.includes(blog.category)
+                            : true;
+                        const matchesSearchTerm = blog.title.toLowerCase().includes(searchTerm) ||
+                                                  blog.author.toLowerCase().includes(searchTerm) ||
+                                                  blog.content.toLowerCase().includes(searchTerm);
+                        return matchesCategory && matchesSearchTerm;
+                    });
+
+                    if (matchingBlogs.length > 0) {
+                        if (!filtered[year]) {
+                            filtered[year] = {};
+                        }
+                        filtered[year][month] = matchingBlogs;
+                    }
+                });
+            });
+            setFilteredBlogs(filtered);
+        };
+
+        filterBlogs();
+    }, [searchTerm, selectedCategories, blogs]);
+
     const handleDelete = (id, year, month) => {
         if (!token) {
             alert("You must be logged in to delete a blog.");
             return;
         }
-        const delete_url = `${API_URL}/delete/${id}`;
+        const delete_url = `${DEV_URL}/delete/${id}`;
         fetch(delete_url, {
             method: 'DELETE',
         })
@@ -101,27 +141,20 @@ const Timeline = () => {
     };
 
     const handleSearch = (event) => {
-        const searchValue = event.target.value.toLowerCase();
-        setSearchTerm(searchValue);
+        setSearchTerm(event.target.value.toLowerCase());
+    };
 
-        const filtered = {};
-        Object.keys(blogs).forEach(year => {
-            Object.keys(blogs[year]).forEach(month => {
-                const matchingBlogs = blogs[year][month].filter(blog =>
-                    blog.title.toLowerCase().includes(searchValue) ||
-                    blog.author.toLowerCase().includes(searchValue) ||
-                    blog.content.toLowerCase().includes(searchValue)
-                );
-                if (matchingBlogs.length > 0) {
-                    if (!filtered[year]) {
-                        filtered[year] = {};
-                    }
-                    filtered[year][month] = matchingBlogs;
-                }
-            });
-        });
-        setFilteredBlogs(filtered);
-        console.log("filtered: ", filteredBlogs)
+    const handleCategoryChange = (event) => {
+        const category = event.target.value;
+        setSelectedCategories(prevCategories =>
+            prevCategories.includes(category)
+                ? prevCategories.filter(c => c !== category)
+                : [...prevCategories, category]
+        );
+    };
+
+    const toggleFilterOpen = () => {
+        setFilterOpen(!filterOpen);
     };
 
     return (
@@ -135,6 +168,24 @@ const Timeline = () => {
                     onChange={handleSearch}
                     className={styles.searchInput}
                 />
+                <button onClick={toggleFilterOpen} className={styles.filterButton}>
+                    <FilterListIcon /> Filter
+                </button>
+                {filterOpen && (
+                    <div className={styles.checklistContainer}>
+                        {categories.map(category => (
+                            <label key={category} className={styles.checkboxLabel}>
+                                <input
+                                    type="checkbox"
+                                    value={category}
+                                    checked={selectedCategories.includes(category)}
+                                    onChange={handleCategoryChange}
+                                />
+                                {category}
+                            </label>
+                        ))}
+                    </div>
+                )}
             </div>
             {Object.keys(filteredBlogs).sort((a, b) => b - a).map(year => (
                 <Accordion key={year}
@@ -182,4 +233,4 @@ const Timeline = () => {
     );
 }
 
-export default Timeline;
+export default AllBlogs;

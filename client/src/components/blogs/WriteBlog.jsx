@@ -3,6 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styles from '../blogs/write.module.css';
 import { Navigate } from 'react-router-dom';
+// import DEV_URL from '../../config';
 import API_URL from '../../config';
 
 export const WriteBlog = () => {

@@ -1,35 +1,78 @@
-/* .container {
+.navContainer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 100px;
+    width: 100%;
+    position: relative;
 }
 
-.social {
+.brand {
     display: flex;
-    gap: 15px;
-    flex: 1;
-}
-
-.links {
-    display: flex;
-    gap: 50px;
-    flex: 1;
-    font-size: 25px;
     align-items: center;
-    padding: 30px;
 }
 
-.github {
-    background-color: white;
+.login {
+    margin-left: 20px;
 }
 
-.name {
-    flex: 1;
-    text-align: center;
-    font-size: 36px;
-    font-weight: bold;
-} */
+.logout:hover {
+    color: #ff6600;
+}
+
+.blogLink {
+    margin-left: 8px;
+}
+
+.loginRight {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.navbar-toggler {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.navbar-toggler-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'><path stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+}
+
+.menuIcon {
+    position: relative;
+}
+
+.menuButton {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.menuButton:hover {
+    color: #ff6600;
+}
+
+.menuItems {
+    right: 0;
+    left: auto;
+    overflow: hidden;
+    background-color: black;
+}
+
+/* Custom styles for dropdown items */
+.dropdown-item {
+    background-color: transparent;
+    color: #fff;
+    transition: color 0.3s;
+}
 
 
 
@@ -38,27 +81,35 @@
     display: flex;
     margin: 0;
     padding: 0;
-    color: red;
-  }
-  
-  .item {
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.item {
     margin-right: 20px;
-    z-index: 10000px;
-  }
-  
-  .link {
-    color: #fff; /* Text color */
+}
+
+.link {
+    color: #fff;
     text-decoration: none;
-    transition: color 0.3s; /* Smooth color transition */
-  }
-  
-  .link:hover {
-    color: #ff6600; /* Hover color */
-  }
-  
+    transition: color 0.3s;
+}
+
+.link:hover,
+.link:focus,
+.link.active {
+    background-color: transparent;
+    color: #ff6600;
+}
 
 
-@media screen and (max-width:1280px) {
+@media screen and (min-width: 1281px) {
+    .loginRight {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1280px) {
     .name {
         font-size: 20px;
     }
@@ -68,14 +119,23 @@
     }
 }
 
-@media screen and (max-width:1024px) {
+@media screen and (max-width: 1024px) {
     .name {
         font-size: 20px;
         text-align: left;
     }
     .social {
         display: none;
+    }
+    .login {
+        display: none;
+    }
 
+}
+
+@media screen and (min-width: 981px) {
+    .loginRight {
+        display: none;
     }
 }
 
@@ -85,15 +145,34 @@
         text-align: left;
     }
 
-}
+    .login {
+        display: none;
+    }
 
-@media screen and (max-width: 640px) {
-    .links {
-        justify-content: flex-end;
+    .navbar-nav {
+        flex-direction: column;
+        align-items: flex-end;
+        width: 100%;
+    }
+
+    .navbar-nav.show {
+        display: flex;
     }
 
     .link {
-        display: none;
+        display: block;
+        padding: 10px 15px;
+        width: 100%;
     }
-    
+
+    .item {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .name {
+        font-size: 12px;
+        text-align: left;
+    }
 }

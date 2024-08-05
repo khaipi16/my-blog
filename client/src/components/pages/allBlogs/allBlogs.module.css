@@ -1,0 +1,153 @@
+/* .wrapper {
+    padding: 20px;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.searchInput {
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+.contentContainer {
+    margin-bottom: 20px;
+}
+
+.buttons {
+    margin-top: 10px;
+}
+
+.updateButton,
+.deleteButton {
+    margin-right: 10px;
+}
+
+.updateButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.deleteButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.updateButton:hover,
+.deleteButton:hover {
+    opacity: 0.8;
+} */
+
+
+.wrapper {
+    padding: 20px;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.searchInput {
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+.filterButton {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.filterButton:hover {
+    background-color: #0056b3;
+}
+
+.checklistContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.checkboxLabel input {
+    margin-right: 5px;
+}
+
+.contentContainer {
+    margin-bottom: 20px;
+}
+
+.buttons {
+    margin-top: 10px;
+}
+
+.updateButton,
+.deleteButton {
+    margin-right: 10px;
+}
+
+.updateButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.deleteButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.updateButton:hover {
+    background-color: #45a049;
+}
+
+.deleteButton:hover {
+    background-color: #e41f1f;
+}

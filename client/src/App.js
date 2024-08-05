@@ -7,6 +7,7 @@ import { Login } from './components/pages/login/Login';
 import SingleBlog from './components/pages/single-blog/BlogPage';
 import Timeline from './components/pages/timeline/Timeline';
 import Register from './components/pages/login/Register';
+import AllBlogs from './components/pages/allBlogs/AllBlogs';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/blogs/:id" element={<SingleBlog />} />
         <Route path="/recent-blogs" element={<Timeline />} />
+        <Route path="/all-blogs" element={<AllBlogs />} />
         <Route path="/write" element={<WriteBlog />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
