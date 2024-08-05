@@ -59,7 +59,7 @@ const AllBlogs = () => {
     };
 
     useEffect(() => {
-        const blog_url = `${DEV_URL}/blogs`;
+        const blog_url = `${API_URL}/blogs`;
         fetch(blog_url)
             .then(response => response.json())
             .then(blogData => {
@@ -113,7 +113,7 @@ const AllBlogs = () => {
             alert("You must be logged in to delete a blog.");
             return;
         }
-        const delete_url = `${DEV_URL}/delete/${id}`;
+        const delete_url = `${API_URL}/delete/${id}`;
         fetch(delete_url, {
             method: 'DELETE',
         })
