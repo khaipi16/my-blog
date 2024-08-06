@@ -127,7 +127,7 @@ const Timeline = () => {
     return (
         <div className="wrapper">
             <div className={styles.title}>
-                <h1>All Blogs</h1>
+                <h1>Recent Blogs</h1>
                 <input
                     type="text"
                     placeholder="Search blogs..."

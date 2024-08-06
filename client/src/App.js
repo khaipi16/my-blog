@@ -8,6 +8,7 @@ import SingleBlog from './components/pages/single-blog/BlogPage';
 import Timeline from './components/pages/timeline/Timeline';
 import Register from './components/pages/login/Register';
 import AllBlogs from './components/pages/allBlogs/AllBlogs';
+import About from './components/pages/about/About';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/write" element={<WriteBlog />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </Router>
 

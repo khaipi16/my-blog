@@ -60,6 +60,7 @@ const Navbar = () => {
                     <ul className={`dropdown-menu dropdown-menu-end ${styles.menuItems}`} aria-labelledby="dropdownMenuButton">
                         <li><NavLink to='/write' className={`dropdown-item ${styles.link}`}>Write</NavLink></li>
                         <li><NavLink to='/recent-blogs' className={`dropdown-item ${styles.link}`}>Recent Blogs</NavLink></li>
+                        <li><NavLink to='/all-blogs' className={`dropdown-item ${styles.link}`}>All Blogs</NavLink></li>
                         <li><NavLink to='/projects' className={`dropdown-item ${styles.link}`}>Projects</NavLink></li>
                         <li><NavLink to='/about' className={`dropdown-item ${styles.link}`}>About</NavLink></li>
                         {userData ? (
