@@ -13,7 +13,7 @@
 }
 
 .content {
-    /* width: 100%; */
+    max-height: 300px;
 }
 
 .searchInput {
@@ -53,4 +53,9 @@
 .deleteButton {
     background-color: red;
     color: white;
+}
+
+.noBlog {
+    margin-top: 20px;
+    text-align: center;
 }

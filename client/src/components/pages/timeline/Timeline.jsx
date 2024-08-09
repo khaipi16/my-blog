@@ -121,8 +121,14 @@ const Timeline = () => {
             });
         });
         setFilteredBlogs(filtered);
-        console.log("filtered: ", filteredBlogs)
     };
+
+    const limitContent = (content, maxLength) => {
+        if(content.length > maxLength) {
+            return content.slice(0, maxLength) + "...";
+        }
+        return content
+    }
 
     return (
         <div className="wrapper">
@@ -136,48 +142,54 @@ const Timeline = () => {
                     className={styles.searchInput}
                 />
             </div>
-            {Object.keys(filteredBlogs).sort((a, b) => b - a).map(year => (
-                <Accordion key={year}
-                    expanded={expandYear === year}
-                    onChange={handleExpandYear(year)}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>{year}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {Object.keys(filteredBlogs[year]).map(month => (
-                            <Accordion key={month}
-                                expanded={expandMonth?.year === year && expandMonth?.month === month}
-                                onChange={handleExpandMonth(year, month)}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography>{month}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    {filteredBlogs[year][month].map((postData, index) => (
-                                        <div className={styles.contentContainer} key={index}>
-                                            <NavLink to={`/blogs/${postData._id}`} className="nav-link">
-                                                <strong>{postData.title}</strong>
-                                            </NavLink>
-                                            <div><strong>Author:</strong> {postData.author}</div>
-                                            <div><strong>Date:</strong> {new Date(postData.date).toLocaleDateString()}</div>
-                                            <div className={styles.content} dangerouslySetInnerHTML={{ __html: postData.content }} />
-                                            {token && (
-                                                <div className={styles.buttons}>
-                                                    <button className={styles.updateButton}>Update</button>
-                                                    <button
-                                                        className={styles.deleteButton}
-                                                        onClick={() => handleDelete(postData._id, year, month)}
-                                                    >Delete
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </AccordionDetails>
-                            </Accordion>
-                        ))}
-                    </AccordionDetails>
-                </Accordion>
-            ))}
+
+            {Object.keys(filteredBlogs).length > 0 ? (
+                Object.keys(filteredBlogs).sort((a, b) => b - a).map(year => (
+                    <Accordion key={year}
+                        expanded={expandYear === year}
+                        onChange={handleExpandYear(year)}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography>{year}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {Object.keys(filteredBlogs[year]).map(month => (
+                                <Accordion key={month}
+                                    expanded={expandMonth?.year === year && expandMonth?.month === month}
+                                    onChange={handleExpandMonth(year, month)}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                        <Typography>{month}</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        {filteredBlogs[year][month].map(postData => (
+                                            <div className={styles.contentContainer} key={postData._id}>
+                                                <NavLink to={`/blogs/${postData._id}`} className="nav-link">
+                                                    <strong>{postData.title}</strong>
+                                                </NavLink>
+                                                <div><strong>Author:</strong> {postData.author}</div>
+                                                <div><strong>Date:</strong> {new Date(postData.date).toLocaleDateString()}</div>
+                                                <div><strong>Category:</strong> {postData.category}</div> {/* Display categories */}
+                                                <div className={styles.content} dangerouslySetInnerHTML={{ __html: limitContent(postData.content, 500) }} />
+                                                {token && (
+                                                    <div className={styles.buttons}>
+                                                        <button className={styles.updateButton}>Update</button>
+                                                        <button
+                                                            className={styles.deleteButton}
+                                                            onClick={() => handleDelete(postData._id, year, month)}
+                                                        >Delete
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </AccordionDetails>
+                                </Accordion>
+                            ))}
+                        </AccordionDetails>
+                    </Accordion>
+                ))
+            ) : (
+                <h3 className={styles.noBlog}>No Blogs Found</h3>
+            )}
         </div>
     );
 }

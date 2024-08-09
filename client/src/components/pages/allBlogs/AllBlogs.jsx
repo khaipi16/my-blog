@@ -14,48 +14,25 @@ import API_URL from '../../../config';
 import styles from './allBlogs.module.css';
 
 const AllBlogs = () => {
-    const [expandYear, setExpandYear] = useState(null);
-    const [expandMonth, setExpandMonth] = useState(null);
-    const [blogs, setBlogs] = useState({});
+    const [expandCategory, setExpandCategory] = useState(null);
+    const [expandBlog, setExpandBlog] = useState(null);
+    const [blogs, setBlogs] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [filteredBlogs, setFilteredBlogs] = useState({});
+    const [filteredBlogs, setFilteredBlogs] = useState([]);
     const [filterOpen, setFilterOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { token } = useUser();
 
     const categories = ["Technology", "Health", "Lifestyle", "Education"];
 
-    const handleExpandYear = (panel) => (event, isExpanded) => {
-        setExpandYear(isExpanded ? panel : null);
+    const handleExpandCategory = (category) => (event, isExpanded) => {
+        setExpandCategory(isExpanded ? category : null);
+        setExpandBlog(null); // Reset blog expansion when category is changed
     };
 
-    const handleExpandMonth = (year, month) => (event, isExpanded) => {
-        setExpandMonth(isExpanded ? { year, month } : null);
-    };
-
-    const formatBlogDisplay = (blogData) => {
-        const blogDates = {};
-        blogData.forEach((blog) => {
-            const dateString = blog.date;
-            if (!dateString || !/\d{4}-\d{2}-\d{2}/.test(dateString)) {
-                console.error('Invalid date format or undefined date:', dateString);
-                return;
-            }
-            const date = new Date(dateString);
-            const year = date.getFullYear().toString();
-            const month = date.toLocaleString('default', { month: 'long' });
-
-            if (!blogDates[year]) {
-                blogDates[year] = {};
-            }
-
-            if (!blogDates[year][month]) {
-                blogDates[year][month] = [];
-            }
-
-            blogDates[year][month].push(blog);
-        });
-        return blogDates;
+    const handleExpandBlog = (id) => (event, isExpanded) => {
+        setExpandBlog(isExpanded ? id : null);
     };
 
     useEffect(() => {
@@ -65,13 +42,17 @@ const AllBlogs = () => {
             .then(blogData => {
                 const sanitizedBlogs = blogData.Data.map(blog => ({
                     ...blog,
-                    content: DOMPurify.sanitize(blog.content)
+                    content: DOMPurify.sanitize(blog.content),
+                    category: Array.isArray(blog.category) ? blog.category : [blog.category] // Ensure category is an array
                 }));
-                const formattedBlogData = formatBlogDisplay(sanitizedBlogs);
-                setBlogs(formattedBlogData);
-                setFilteredBlogs(formattedBlogData);
+                setBlogs(sanitizedBlogs);
+                setFilteredBlogs(sanitizedBlogs);
+                setLoading(false);
             })
-            .catch(error => console.error('Failed to fetch blogs:', error));
+            .catch(error => {
+                console.error('Failed to fetch blogs:', error);
+                setLoading(false);
+            });
     }, []);
 
     useEffect(() => {
@@ -81,34 +62,21 @@ const AllBlogs = () => {
                 return;
             }
 
-            const filtered = {};
-            Object.keys(blogs).forEach(year => {
-                Object.keys(blogs[year]).forEach(month => {
-                    const matchingBlogs = blogs[year][month].filter(blog => {
-                        const matchesCategory = selectedCategories.length
-                            ? selectedCategories.includes(blog.category)
-                            : true;
-                        const matchesSearchTerm = blog.title.toLowerCase().includes(searchTerm) ||
-                                                  blog.author.toLowerCase().includes(searchTerm) ||
-                                                  blog.content.toLowerCase().includes(searchTerm);
-                        return matchesCategory && matchesSearchTerm;
-                    });
-
-                    if (matchingBlogs.length > 0) {
-                        if (!filtered[year]) {
-                            filtered[year] = {};
-                        }
-                        filtered[year][month] = matchingBlogs;
-                    }
-                });
+            const filtered = blogs.filter(blog => {
+                const matchesCategory = selectedCategories.length === 0 || blog.category.some(cat => selectedCategories.includes(cat));
+                const matchesSearchTerm = blog.title.toLowerCase().includes(searchTerm) ||
+                                          blog.author.toLowerCase().includes(searchTerm) ||
+                                          blog.content.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearchTerm;
             });
+
             setFilteredBlogs(filtered);
         };
 
         filterBlogs();
     }, [searchTerm, selectedCategories, blogs]);
 
-    const handleDelete = (id, year, month) => {
+    const handleDelete = (id) => {
         if (!token) {
             alert("You must be logged in to delete a blog.");
             return;
@@ -119,17 +87,8 @@ const AllBlogs = () => {
         })
             .then(response => {
                 if (response.ok) {
-                    setBlogs(newBlogs => {
-                        const updatedYear = { ...newBlogs[year] };
-                        const updatedMonthBlogs = updatedYear[month].filter(
-                            blog => blog._id !== id
-                        );
-                        updatedYear[month] = updatedMonthBlogs;
-                        return {
-                            ...newBlogs,
-                            [year]: updatedYear
-                        };
-                    });
+                    setBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== id));
+                    setFilteredBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== id));
                 } else {
                     throw new Error("Failed to delete the blog");
                 }
@@ -156,6 +115,22 @@ const AllBlogs = () => {
     const toggleFilterOpen = () => {
         setFilterOpen(!filterOpen);
     };
+
+    // Organize blogs by category
+    const organizeBlogsByCategory = (blogs) => {
+        const categoryMap = {};
+        blogs.forEach(blog => {
+            blog.category.forEach(cat => {
+                if (!categoryMap[cat]) {
+                    categoryMap[cat] = [];
+                }
+                categoryMap[cat].push(blog);
+            });
+        });
+        return categoryMap;
+    };
+
+    const categoryBlogs = organizeBlogsByCategory(filteredBlogs);
 
     return (
         <div className="wrapper">
@@ -187,48 +162,56 @@ const AllBlogs = () => {
                     </div>
                 )}
             </div>
-            {Object.keys(filteredBlogs).sort((a, b) => b - a).map(year => (
-                <Accordion key={year}
-                    expanded={expandYear === year}
-                    onChange={handleExpandYear(year)}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>{year}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {Object.keys(filteredBlogs[year]).map(month => (
-                            <Accordion key={month}
-                                expanded={expandMonth?.year === year && expandMonth?.month === month}
-                                onChange={handleExpandMonth(year, month)}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography>{month}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    {filteredBlogs[year][month].map((postData, index) => (
-                                        <div className={styles.contentContainer} key={index}>
-                                            <NavLink to={`/blogs/${postData._id}`} className="nav-link">
-                                                <strong>{postData.title}</strong>
+
+            {filteredBlogs.length === 0 ? (
+                <h3 className={styles.noBlogs}>No blogs found</h3>
+            ) : (
+                Object.keys(categoryBlogs).sort().map(category => (
+                    <Accordion
+                        key={category}
+                        expanded={expandCategory === category}
+                        onChange={handleExpandCategory(category)}
+                    >
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography>{category}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {categoryBlogs[category].map(blog => (
+                                <Accordion
+                                    key={blog._id}
+                                    expanded={expandBlog === blog._id}
+                                    onChange={handleExpandBlog(blog._id)}
+                                >
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                        <Typography>{blog.title}</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <div className={styles.contentContainer}>
+                                            <NavLink to={`/blogs/${blog._id}`} className="nav-link">
+                                                <strong>{blog.title}</strong>
                                             </NavLink>
-                                            <div><strong>Author:</strong> {postData.author}</div>
-                                            <div><strong>Date:</strong> {new Date(postData.date).toLocaleDateString()}</div>
-                                            <div className={styles.content} dangerouslySetInnerHTML={{ __html: postData.content }} />
+                                            <div><strong>Author:</strong> {blog.author}</div>
+                                            <div><strong>Date:</strong> {new Date(blog.date).toLocaleDateString()}</div>
+                                            <div className={styles.content} dangerouslySetInnerHTML={{ __html: blog.content }} />
                                             {token && (
                                                 <div className={styles.buttons}>
                                                     <button className={styles.updateButton}>Update</button>
                                                     <button
                                                         className={styles.deleteButton}
-                                                        onClick={() => handleDelete(postData._id, year, month)}
-                                                    >Delete
+                                                        onClick={() => handleDelete(blog._id)}
+                                                    >
+                                                        Delete
                                                     </button>
                                                 </div>
                                             )}
                                         </div>
-                                    ))}
-                                </AccordionDetails>
-                            </Accordion>
-                        ))}
-                    </AccordionDetails>
-                </Accordion>
-            ))}
+                                    </AccordionDetails>
+                                </Accordion>
+                            ))}
+                        </AccordionDetails>
+                    </Accordion>
+                ))
+            )}
         </div>
     );
 }

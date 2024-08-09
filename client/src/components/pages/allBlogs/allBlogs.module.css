@@ -152,3 +152,7 @@
 .deleteButton:hover {
     background-color: #e41f1f;
 }
+
+.noBlogs {
+    text-align: center;
+}
