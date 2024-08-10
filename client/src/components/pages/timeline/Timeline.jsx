@@ -76,21 +76,56 @@ const Timeline = () => {
         const delete_url = `${API_URL}/delete/${id}`;
         fetch(delete_url, {
             method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
         })
             .then(response => {
                 if (response.ok) {
-                    setBlogs(newBlogs => {
-                        const updatedYear = { ...newBlogs[year] };
+                    /**
+                     * prevBlogs format goes like:
+                     * Year -> Month -> Array(x)
+                     *  -> (0): {_id:, author:, category...}
+                     *  -> (1): {_id:, author:, category...}
+                     * 
+                     *  Need to unparse
+                     */
+
+                    setBlogs(prevBlogs => {
+                        const updatedYear = { ...prevBlogs[year] };
                         const updatedMonthBlogs = updatedYear[month].filter(
                             blog => blog._id !== id
                         );
                         updatedYear[month] = updatedMonthBlogs;
                         return {
-                            ...newBlogs,
+                            ...prevBlogs,
                             [year]: updatedYear
                         };
                     });
-                } else {
+                    setFilteredBlogs(
+                        prevBlogs => {
+                            // ...prevBlogs creates a copy of the state, instead of directly
+                            // maniuplating the current state
+                            const updatedFilteredYear = {...prevBlogs[year]}; // Create a new copy of the year object
+                            // Filter out the deleted blog
+                            const updatedFilteredMonth = updatedFilteredYear[month].filter(
+                                blog => blog._id != id
+                            )
+                            // Update the month with the new list of blogs
+                            updatedFilteredYear[month] = updatedFilteredMonth;
+
+                            return {
+                                ...prevBlogs,
+                                [year]: updatedFilteredYear
+                            }
+                        }
+                    )
+                } 
+                else if (response.status===403) {
+                    alert("You do not have permission to delete this blog!");
+                }
+                else {
                     throw new Error("Failed to delete the blog");
                 }
             })

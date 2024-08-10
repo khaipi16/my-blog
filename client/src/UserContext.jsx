@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 
 // Define structure of context data
@@ -14,6 +14,14 @@ const UserContext = createContext(defaultUserState);
 
 export const UserProvider = ({ children }) => {
     const [userData, setUserData] = useState({ userData: null, token: null });
+
+    useEffect(() => {
+        // Check if there's a token in local storage when app starts
+        const token = localStorage.getItem('token');
+        if(token) {
+            setUserData({ userData: null, token }); // Fetch userData if necessary
+        }
+    }, [])
 
     const login = ( userData, token ) => {
         localStorage.setItem('token', token)

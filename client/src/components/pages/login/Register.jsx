@@ -10,6 +10,7 @@ const Register = () => {
     const [dob, setDOB] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [verifiedPassword, setVerifiedPassword] = useState('');
     const [redirect, setRedirect] = useState(false);
 
     const handleRegister = async (e) => {
@@ -19,6 +20,11 @@ const Register = () => {
         const register_url2 = 'https://52.91.80.202:5000/register'
 
         try {
+            if(password != verifiedPassword) {
+                alert("Passowrd does not match!");
+                return;
+            }
+
             const response = await fetch(register_url, {
                 method: 'POST',
                 body: JSON.stringify({ firstName, lastName, dob, email, password }),
@@ -33,10 +39,8 @@ const Register = () => {
                 alert('The email address you entered is already registered.')
             }             
             else {
-
                 // Handle non-success status codes (e.g., 400 Bad Request)
                 alert('Failed to register. Please check your input.');
-
             }
         } catch (error) {
             // Handle network errors or other exceptions
@@ -46,7 +50,7 @@ const Register = () => {
     }
 
     if(redirect) {
-        return <Navigate to={'/'} />
+        return <Navigate to={'/login'} />
     }
 
 
@@ -105,6 +109,15 @@ const Register = () => {
                                                 placeholder="Enter your password" 
                                                 value={password}
                                                 onChange={ev => setPassword(ev.target.value)}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="password" className="form-label">Verify Password</label>
+                                            <input type="password" className="form-control" 
+                                                placeholder="Verify your password" 
+                                                value={verifiedPassword}
+                                                onChange={ev => setVerifiedPassword(ev.target.value)}
                                                 required
                                             />
                                         </div>

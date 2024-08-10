@@ -1,5 +1,7 @@
-from datetime import datetime
+import os
 import json
+import uuid
+from datetime import datetime
 from bson import json_util
 from flask import Blueprint, make_response, request, jsonify
 from flask_mail import Mail, Message
@@ -8,9 +10,6 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 from models.blog import Blog
 from models.user import User
 from service.blog_service import BlogService
-
-# Import mail object from main app module
-# from app import mail
 
 
 class BlogAPI:
@@ -67,6 +66,19 @@ class BlogAPI:
         if not current_user:
             return jsonify(self.response_format(error="Unauthorized", message="User must be logged in to post.")), 401
         
+        # Fetch current user from db using UUID
+        current_user_id = str(current_user['user_id'])
+        user = self.blog_service.get_user_by_id(current_user_id)
+        
+        if not user:
+            return jsonify(self.response_format(error="Unauthorized", message="User not found")), 404
+        
+        # Check if user has reached their upload limit
+        if not user.get('is_admin') and user.get('max_blogs') is not None:
+            blog_count = self.blog_service.user_uploads_count(current_user_id)
+            if blog_count > user.get('max_blogs'):
+                return jsonify(self.response_format(error="Upload limit reached", message="You have reached your upload limit.")), 403
+        
         request_data = request.get_json()
         title = request_data.get('title')
         author = request_data.get('author')
@@ -77,7 +89,7 @@ class BlogAPI:
             return jsonify(self.response_format(error="Missing data", message="All fields are required")), 400
 
         try:
-            blog_post = Blog(title, author, category, content)
+            blog_post = Blog(current_user_id, title, author, category, content)
             blog_id = self.blog_service.save_to_db(blog_post)
             return jsonify(self.response_format(data={"id": blog_id}, message="Successfully posted a blog")), 201
         except Exception as ex:
@@ -135,8 +147,24 @@ class BlogAPI:
             return jsonify(self.response_format(error=str(ex), message="Failed to update blog")), 500
 
 
-
+    @jwt_required()
     def delete_blog(self, id):
+        current_user = get_jwt_identity()
+        if not current_user:
+            return jsonify(self.response_format(error="Unauthorized", message="You are not authorized to delete.")), 401
+        
+        blog = self.blog_service.get_by_id(id)
+        if not blog:
+            return jsonify(self.response_format(error="Blog not found", message="The selected blog is not found"))
+        
+        current_user_id = str(current_user['user_id'])
+        user = self.blog_service.get_user_by_id(current_user_id)
+        blog_user_id = blog.get('user_id')
+        is_admin = user.get('is_admin')
+
+        if blog_user_id != current_user_id and not is_admin:
+            return jsonify(self.response_format(error="Unauthorized to delete", message="You are not authorized to delete this blog")), 403
+        
         try:
             success = self.blog_service.delete_blog(id)
             if success:
@@ -156,32 +184,34 @@ class BlogAPI:
         if missing_fields:
             return jsonify(self.response_format(error="Missing data", message={"missing field":missing_fields})), 400
 
-        
+        # Generate unique UUID serving as unique user_id
+        user_id = str(uuid.uuid4())
         first_name = request_data.get('firstName')
         last_name = request_data.get('lastName')
         dob = datetime.strptime(request_data.get('dob'), "%Y-%m-%d")
         email = request_data.get('email')
         hashed_password = generate_password_hash(request_data.get('password'), method='sha256')
-
         
         # # Ensure email is unique
         existing_user = self.blog_service.users_collection.find_one({"email": email})
         if existing_user:
             return jsonify(self.response_format(error="Duplicate email", message="That email already exists!")), 409
-        # verification_token = self.blog_service.create_verification_token()
+        
         try:
+            # Grant admin rights to specified email
+            is_admin = email == os.getenv("ADMIN_EMAIL")
             new_user = User(
+                user_id=user_id,
+                is_admin=is_admin,
                 first_name=first_name, 
                 last_name=last_name, 
                 dob=dob, 
                 email=email, 
-                password=hashed_password, 
-                # verification_token=verification_token, 
-                # verified=False
+                password=hashed_password,
+                max_blogs = 5 if not is_admin else None
             )
 
             user_id = self.blog_service.save_user(new_user)
-            # self.send_mail(email, verification_token)
             return jsonify(self.response_format(data={"id": user_id}, message="Successfully registered!")), 201
         except Exception as ex:
             return jsonify({'error': str(ex), 'message': 'Failed to register'}), 500
@@ -195,9 +225,10 @@ class BlogAPI:
         password = request_data.get('password')
 
         user = self.blog_service.users_collection.find_one({"email": username})
+        user_id = str(user['user_id'])
         try:
             if user and check_password_hash(user['password'], password):
-                access_token = create_access_token(identity=username)
+                access_token = create_access_token(identity={"user_id": user_id, "email":username})
                 return jsonify(self.response_format(data={"access_token": access_token, "user_info": username})), 200
             else:
                 return jsonify(self.response_format(error="Invalid usernmae or password")), 401

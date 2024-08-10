@@ -22,7 +22,6 @@ const BlogPage = () => {
 
                     // Sanitize blog content before setting it to setBlog
                     const safeHTMLContent = DOMPurify.sanitize(BlogData.Data.content);
-                    console.log(BlogData)
                     setBlog({...BlogData.Data, content: safeHTMLContent})
                 })
     }, [])

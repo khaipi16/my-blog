@@ -78,6 +78,10 @@ export const WriteBlog = () => {
                 alert("You do not have permission to post a blog. Please contact the owner.");
             }
 
+            if (response.status === 403) {
+                alert("You have reached you're upload limit!")
+            }
+
             if (!response.ok) {
                 const errorResponse = await response.json();
                 throw new Error(`HTTP error: ${errorResponse.error}`);

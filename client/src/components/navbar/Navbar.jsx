@@ -4,7 +4,7 @@ import { useUser } from '../../UserContext';
 import styles from './navbar.module.css';
 
 const Navbar = () => {
-    const { userData, logout } = useUser();
+    const { userData, token, logout } = useUser();
 
     const handleLogout = () => {
         logout();
@@ -15,7 +15,7 @@ const Navbar = () => {
             <div className="container-fluid">
                 <div className={`navbar-brand ${styles.brand}`}>
                     <div className={styles.login}>
-                        {userData ? (
+                        {token ? (
                             <NavLink onClick={handleLogout} to="/login" className={`nav-link ${styles.logout}`}>Logout</NavLink>
                         ) : (
                             <NavLink to="/login" className={`nav-link ${styles.logout}`}>Login</NavLink>
@@ -41,7 +41,7 @@ const Navbar = () => {
                         <li className="nav-item">
                             <NavLink to="/about" className={`nav-link ${styles.link}`}>About</NavLink>
                         </li>
-                        {userData ? (
+                        {token ? (
                             <li className="nav-item">
                                 <NavLink onClick={handleLogout} to="/login" className={`nav-link ${styles.loginRight}`}>Logout</NavLink>
                             </li>

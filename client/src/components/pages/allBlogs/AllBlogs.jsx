@@ -24,7 +24,22 @@ const AllBlogs = () => {
     const [loading, setLoading] = useState(true);
     const { token } = useUser();
 
-    const categories = ["Technology", "Health", "Lifestyle", "Education"];
+    const categories = [
+       'Blogs',
+       'Helpful Commands', 
+       'Bugs',
+       'Java',
+       'Python',
+       'Javascript',
+       'Spring',
+       'React',
+       'Angular',
+       'Code Challenge',
+       'CSS',
+       'SQL',
+       'Database', 
+       'Cloud'
+    ];
 
     const handleExpandCategory = (category) => (event, isExpanded) => {
         setExpandCategory(isExpanded ? category : null);
@@ -41,7 +56,7 @@ const AllBlogs = () => {
             .then(response => response.json())
             .then(blogData => {
                 const sanitizedBlogs = blogData.Data.map(blog => ({
-                    ...blog,
+                 ...blog,
                     content: DOMPurify.sanitize(blog.content),
                     category: Array.isArray(blog.category) ? blog.category : [blog.category] // Ensure category is an array
                 }));
@@ -84,12 +99,20 @@ const AllBlogs = () => {
         const delete_url = `${API_URL}/delete/${id}`;
         fetch(delete_url, {
             method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            }
         })
             .then(response => {
                 if (response.ok) {
                     setBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== id));
                     setFilteredBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== id));
-                } else {
+                }
+                else if (response.status === 403) {
+                    alert("You do not have permission to delete this blog!");
+                }
+                else {
                     throw new Error("Failed to delete the blog");
                 }
             })

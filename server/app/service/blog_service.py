@@ -1,5 +1,4 @@
 import os
-import secrets
 from pymongo import MongoClient
 from bson import ObjectId, json_util
 from flask import current_app as app
@@ -14,6 +13,7 @@ class BlogService:
         self.db = client.get_database('blog')
 
         self.users_collection = self.db['users']
+        self.blog_collection = self.db['blogs']
 
 
 
@@ -83,8 +83,9 @@ class BlogService:
         result = self.db.users.insert_one(user.to_dict())
         return str(result.inserted_id)
     
-
+    def get_user_by_id(self, user_id):
+        return self.users_collection.find_one({"user_id": user_id})
     
-    def create_verification_token():
-        """ Generate a secure random token for email verification """
-        return secrets.token_urlsafe(16)
+    def user_uploads_count(self, user_id):
+        return self.blog_collection.count_documents({"user_id": user_id})
+        

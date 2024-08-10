@@ -27,8 +27,6 @@ export const Login = () => {
         });
         if (response.ok) {
             let userInfo = await response.json();
-            console.log('userInfo', userInfo)
-
             
             login(userInfo.Data['user_info'], userInfo.Data['access_token']) // set user data, and token in context
             setRedirect(true)
