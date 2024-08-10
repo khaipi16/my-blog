@@ -6,10 +6,10 @@ from flask_jwt_extended import JWTManager
 
 
 app = Flask(__name__)
-origins = ["http://localhost:3000", "http://127.0.0.1:5000", "http://khai-blog-client.s3-website-us-east-1.amazonaws.com/", "https://my-blog-subo.onrender.com", "https://khaipi.com"]
+origins = ["http://localhost:3000", "https://khaipi.xyz", "http://127.0.0.1:5000", "https://my-blog-subo.onrender.com"]
 
 # PROD CONFIG
-CORS(app, supports_credentials=True, origins=origins[3])
+CORS(app, supports_credentials=True, origins=origins[1])
 
 # # LOCAL CONFIG
 # CORS(app, supports_credentials=True, origins=origins[0])
@@ -20,8 +20,9 @@ jwt = JWTManager(app)
 # Register Blueprints
 app.register_blueprint(blog_bp)
 
+
+# PROD CONFIG
 frontend_folder = os.path.join(os.getcwd(), "../", "client")
-# frontend_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../frontend/build")
 
 build_folder = os.path.join(frontend_folder, "build")
 
