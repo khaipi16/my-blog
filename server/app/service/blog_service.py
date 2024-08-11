@@ -64,9 +64,12 @@ class BlogService:
     def update_blog(self, blog_id, updated_blog):
         # Update a blog post through its blog id
         result = self.db.blogs.update_one({"_id": ObjectId(blog_id)}, {"$set": updated_blog})
+
         if result.matched_count:
-            return True
-        return False
+            updated_document = self.db.blogs.find_one({"_id": ObjectId(blog_id)})
+            return updated_document
+
+        return None
     
     
 

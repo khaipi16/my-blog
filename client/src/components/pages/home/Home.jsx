@@ -16,8 +16,16 @@ export const Home = () => {
         fetch(blog_url)
             .then(response => response.json())
             .then(data => {
+                const date = new Date(data.Data.date);
+
+                const formatDate = date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
                 const safeHTMLContent = DomPurify.sanitize(data.Data.content);
-                setBlog({ ...data.Data, content: safeHTMLContent });
+                setBlog({ ...data.Data, date: formatDate, content: safeHTMLContent });
             })
             .catch(error => console.error('Error fetching blog:', error));
     }, []); // empty array ensures this effect runs only once after initial render
@@ -29,12 +37,12 @@ export const Home = () => {
                 <div className={styles.profileInfo}>
                     <Typography className={styles.profileName} variant="h6">Cin Khai</Typography>
                     <Typography variant="body2" className={styles.intro}>
-                        <p>Hello! My name is Khai, and welcome to my blog. I’m a Software Engineer with a background in Physics.
+                        Hello! My name is Khai, and welcome to my blog. I’m a Software Engineer with a background in Physics.
                             Here, you’ll find posts about programming, design, bugs, and various topics related to my career. 
-                            Writing these blogs helps me better retain and internalize what I’ve learned, and I hope they can be helpful to you too.</p>
+                            Writing these blogs helps me better retain and internalize what I’ve learned, and I hope they can be helpful to you too.
                     </Typography>
                     <Link to={"/about"}>
-                        <Button variant="outlined" color="primary">
+                        <Button className={styles.readMore} variant="outlined" color="primary">
                             Read More
                         </Button>
                     </Link>
@@ -50,11 +58,12 @@ export const Home = () => {
                     <Typography variant="h4" className={styles.title}>
                         {blog.title}
                     </Typography>
-                    <Typography variant="body2" className={styles.content}>
-                        <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+                    <Typography variant="body2" 
+                                className={styles.content}
+                                dangerouslySetInnerHTML={{ __html: blog.content }}>
                     </Typography>
                     <Link to={`/blogs/${blog._id}`}>
-                        <Button className={styles.readMore} variant="outlined" color="primary">
+                        <Button variant="outlined" color="primary">
                             Read More
                         </Button>
                     </Link>

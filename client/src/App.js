@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/navbar/Navbar';
 import { Home } from './components/pages/home/Home';
-import { WriteBlog } from './components/blogs/WriteBlog'
+import { WriteBlog } from './components/crud/postBlog/WriteBlog'
 import { Login } from './components/pages/login/Login';
 import SingleBlog from './components/pages/single-blog/BlogPage';
 import Timeline from './components/pages/timeline/Timeline';

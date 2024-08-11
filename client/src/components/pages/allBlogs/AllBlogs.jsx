@@ -1,3 +1,4 @@
+import styles from './allBlogs.module.css';
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Accordion from '@mui/material/Accordion';
@@ -8,10 +9,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import DOMPurify from 'dompurify';
 import { useUser } from '../../../UserContext';
-// import DEV_URL from '../../../config';
 import API_URL from '../../../config';
-
-import styles from './allBlogs.module.css';
+import deleteBlog from '../../crud/delete/DeleteBlog';
+import editBlog from '../../crud/edit/EditBlog';
+import EditModal from '../../crud/edit/EditModal';
 
 const AllBlogs = () => {
     const [expandCategory, setExpandCategory] = useState(null);
@@ -22,6 +23,8 @@ const AllBlogs = () => {
     const [filteredBlogs, setFilteredBlogs] = useState([]);
     const [filterOpen, setFilterOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [selectedBlog, setSelectedBlog] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const { token } = useUser();
 
     const categories = [
@@ -91,36 +94,6 @@ const AllBlogs = () => {
         filterBlogs();
     }, [searchTerm, selectedCategories, blogs]);
 
-    const handleDelete = (id) => {
-        if (!token) {
-            alert("You must be logged in to delete a blog.");
-            return;
-        }
-        const delete_url = `${API_URL}/delete/${id}`;
-        fetch(delete_url, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    setBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== id));
-                    setFilteredBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== id));
-                }
-                else if (response.status === 403) {
-                    alert("You do not have permission to delete this blog!");
-                }
-                else {
-                    throw new Error("Failed to delete the blog");
-                }
-            })
-            .catch(error => {
-                console.error("Delete failed: ", error);
-                alert('Failed to delete blog');
-            });
-    };
 
     const handleSearch = (event) => {
         setSearchTerm(event.target.value.toLowerCase());
@@ -151,6 +124,23 @@ const AllBlogs = () => {
             });
         });
         return categoryMap;
+    };
+
+    const handleOpenModal = (blog) => {
+        setSelectedBlog(blog);
+        setIsModalOpen(true);
+    };
+
+    const handleUpdateBlog = (currentBlog) => {
+        // Call the editBlog function with the updated data
+        editBlog(currentBlog, setBlogs, setFilteredBlogs, false);
+        handleCloseModal(); // Close the modal after the update
+    };
+
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedBlog(null);
     };
 
     const categoryBlogs = organizeBlogsByCategory(filteredBlogs);
@@ -218,11 +208,13 @@ const AllBlogs = () => {
                                             <div className={styles.content} dangerouslySetInnerHTML={{ __html: blog.content }} />
                                             {token && (
                                                 <div className={styles.buttons}>
-                                                    <button className={styles.updateButton}>Update</button>
+                                                    <button className={styles.updateButton}
+                                                            onClick={() => handleOpenModal(blog)}>
+                                                            Update
+                                                    </button>
                                                     <button
                                                         className={styles.deleteButton}
-                                                        onClick={() => handleDelete(blog._id)}
-                                                    >
+                                                        onClick={() => deleteBlog({ id: blog._id, setBlogs, setFilteredBlogs })}>
                                                         Delete
                                                     </button>
                                                 </div>
@@ -234,6 +226,16 @@ const AllBlogs = () => {
                         </AccordionDetails>
                     </Accordion>
                 ))
+            )}
+
+            {selectedBlog && (
+                <EditModal
+                    open={isModalOpen}
+                    handleClose={handleCloseModal}
+                    blogData={selectedBlog}
+                    handleUpdate={handleUpdateBlog}
+                    
+                />
             )}
         </div>
     );

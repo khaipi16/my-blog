@@ -27,8 +27,8 @@
 
 .profile {
     margin-bottom: 13px;
-    max-width: 55%;
-    max-height: 55%;
+    max-width: 45%;
+    max-height: 45%;
     border-radius: 50%;
     overflow: hidden;
   }
@@ -39,7 +39,7 @@
 
   .profileName {
     text-align: center;
-    width: 50%;
+    width: 42%;
   }
 
   .author {
@@ -80,17 +80,11 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 19; /* Number of lines to show */
     overflow: hidden;
+    margin-bottom: 20px;
+    width: 80%;
 }
 
 
-.readMore {
-    margin-top: 30px;
-    /* padding: 16px 20px; */
-    border: none;
-    border-radius: 5px;
-    width: max-content;
-    cursor: pointer;
-}
 
 @media (max-width: 768px) {
     .home {
@@ -99,11 +93,6 @@
 
     .profileContainer {
         margin-bottom: 15px;
-    }
-
-    .profile {
-        width: 80px;
-        height: 80px;
     }
 
     .profileInfo {
