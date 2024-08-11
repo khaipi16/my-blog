@@ -47,9 +47,6 @@ const About = () => {
 
             <div className={styles.section}>
                 <h2>Contact</h2>
-                <p>
-                    Feel free to reach out via email at khaipi011@gmail.com. You can also connect with me on LinkedIn and look at my personal projects on GitHub using the links below.
-                </p>
             </div>
 
             <div className={styles.socials}>
