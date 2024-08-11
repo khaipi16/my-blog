@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Select from 'react-select';
-import styles from '../blogs/write.module.css';
+import styles from './write.module.css';
 import { Navigate } from 'react-router-dom';
 // import DEV_URL from '../../config';
-import API_URL from '../../config';
+import API_URL from '../../../config';
 
 
 

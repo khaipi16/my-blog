@@ -134,13 +134,36 @@ class BlogAPI:
             return jsonify(self.response_format(error=str(ex), message="Failed to retrieve blogs")), 500
 
 
+    @jwt_required() 
+    def update_blog(self, id):
+        current_user = get_jwt_identity()
 
-    def update_blog(self, blog_id):
+        # Ensures only the correct user can edit their associcated blog
+        blog = self.blog_service.get_by_id(id)
+        if not blog:
+            return jsonify(self.response_format(error="Blog not found", message="The selected blog is not found"))
+        
+        current_user_id = str(current_user['user_id'])
+        user = self.blog_service.get_user_by_id(current_user_id)
+        blog_user_id = blog.get('user_id')
+        is_admin = user.get('is_admin', False)
+
+        if blog_user_id != current_user_id and not is_admin:
+            return jsonify(self.response_format(error="Unauthorized to edit this blog", message="You are not authorized to edit this blog")), 403
         try:
             updated_blog = request.get_json()
-            response = self.blog_service.update_blog(blog_id, updated_blog)
-            if response:
-                return jsonify(self.response_format(message="Successfully updated blog")), 200
+
+            # Removes '_id' from the payload to ensure blog object _id is not updated since it must be unique
+            if '_id' in updated_blog:
+                del updated_blog['_id']
+
+            # Update the blog and return the updated document
+            updated_blog = self.blog_service.update_blog(id, updated_blog)
+
+            if updated_blog:
+                # Return the updated document in the response
+                updated_blog['_id'] = str(updated_blog['_id'])
+                return jsonify(self.response_format(data=updated_blog, message="Successfully updated blog")), 200
             else:
                 return jsonify(self.response_format(error="Failed to update blog")), 400
         except Exception as ex:
@@ -153,6 +176,7 @@ class BlogAPI:
         if not current_user:
             return jsonify(self.response_format(error="Unauthorized", message="You are not authorized to delete.")), 401
         
+        # Ensures only the correct user can delete their associcated blog
         blog = self.blog_service.get_by_id(id)
         if not blog:
             return jsonify(self.response_format(error="Blog not found", message="The selected blog is not found"))
@@ -160,7 +184,7 @@ class BlogAPI:
         current_user_id = str(current_user['user_id'])
         user = self.blog_service.get_user_by_id(current_user_id)
         blog_user_id = blog.get('user_id')
-        is_admin = user.get('is_admin')
+        is_admin = user.get('is_admin', False)
 
         if blog_user_id != current_user_id and not is_admin:
             return jsonify(self.response_format(error="Unauthorized to delete", message="You are not authorized to delete this blog")), 403

@@ -8,15 +8,20 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DOMPurify from 'dompurify';
 import { useUser } from '../../../UserContext';
 import API_URL from '../../../config';
-// import DEV_URL from '../../../config';
 import styles from './timeline.module.css';
+import EditModal from '../../crud/edit/EditModal';
+import deleteBlog from '../../crud/delete/DeleteBlog';
+import editBlog from '../../crud/edit/EditBlog';
+
 
 const Timeline = () => {
     const [expandYear, setExpandYear] = useState(null);
     const [expandMonth, setExpandMonth] = useState(null);
     const [blogs, setBlogs] = useState({});
-    const [searchTerm, setSearchTerm] = useState('');
     const [filteredBlogs, setFilteredBlogs] = useState({});
+    const [selectedBlog, setSelectedBlog] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const { token } = useUser();
 
     const handleExpandYear = (panel) => (event, isExpanded) => {
@@ -66,73 +71,24 @@ const Timeline = () => {
                 setFilteredBlogs(formattedBlogData);
             })
             .catch(error => console.error('Failed to fetch blogs:', error));
-    }, []);
+    }, []);    
 
-    const handleDelete = (id, year, month) => {
-        if (!token) {
-            alert("You must be logged in to delete a blog.");
-            return;
-        }
-        const delete_url = `${API_URL}/delete/${id}`;
-        fetch(delete_url, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        })
-            .then(response => {
-                if (response.ok) {
-                    /**
-                     * prevBlogs format goes like:
-                     * Year -> Month -> Array(x)
-                     *  -> (0): {_id:, author:, category...}
-                     *  -> (1): {_id:, author:, category...}
-                     * 
-                     *  Need to unparse
-                     */
 
-                    setBlogs(prevBlogs => {
-                        const updatedYear = { ...prevBlogs[year] };
-                        const updatedMonthBlogs = updatedYear[month].filter(
-                            blog => blog._id !== id
-                        );
-                        updatedYear[month] = updatedMonthBlogs;
-                        return {
-                            ...prevBlogs,
-                            [year]: updatedYear
-                        };
-                    });
-                    setFilteredBlogs(
-                        prevBlogs => {
-                            // ...prevBlogs creates a copy of the state, instead of directly
-                            // maniuplating the current state
-                            const updatedFilteredYear = {...prevBlogs[year]}; // Create a new copy of the year object
-                            // Filter out the deleted blog
-                            const updatedFilteredMonth = updatedFilteredYear[month].filter(
-                                blog => blog._id != id
-                            )
-                            // Update the month with the new list of blogs
-                            updatedFilteredYear[month] = updatedFilteredMonth;
+    const handleOpenModal = (blog) => {
+        setSelectedBlog(blog);
+        setIsModalOpen(true);
+    };
 
-                            return {
-                                ...prevBlogs,
-                                [year]: updatedFilteredYear
-                            }
-                        }
-                    )
-                } 
-                else if (response.status===403) {
-                    alert("You do not have permission to delete this blog!");
-                }
-                else {
-                    throw new Error("Failed to delete the blog");
-                }
-            })
-            .catch(error => {
-                console.error("Delete failed: ", error);
-                alert('Failed to delete blog');
-            });
+    const handleUpdateBlog = (currentBlog) => {
+        // Call the editBlog function with the updated data
+        editBlog(currentBlog, setBlogs, setFilteredBlogs, true);
+        handleCloseModal(); // Close the modal after the update
+    };
+
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedBlog(null);
     };
 
     const handleSearch = (event) => {
@@ -164,6 +120,7 @@ const Timeline = () => {
         }
         return content
     }
+    
 
     return (
         <div className="wrapper">
@@ -206,10 +163,13 @@ const Timeline = () => {
                                                 <div className={styles.content} dangerouslySetInnerHTML={{ __html: limitContent(postData.content, 500) }} />
                                                 {token && (
                                                     <div className={styles.buttons}>
-                                                        <button className={styles.updateButton}>Update</button>
+                                                        <button
+                                                            className={styles.updateButton}
+                                                            onClick={() => handleOpenModal(postData)}
+                                                        >Update</button>
                                                         <button
                                                             className={styles.deleteButton}
-                                                            onClick={() => handleDelete(postData._id, year, month)}
+                                                            onClick={() => deleteBlog({ id:postData._id, month, year, setBlogs, setFilteredBlogs })}
                                                         >Delete
                                                         </button>
                                                     </div>
@@ -225,8 +185,21 @@ const Timeline = () => {
             ) : (
                 <h3 className={styles.noBlog}>No Blogs Found</h3>
             )}
+
+            {selectedBlog && (
+                <EditModal
+                    open={isModalOpen}
+                    handleClose={handleCloseModal}
+                    blogData={selectedBlog}
+                    handleUpdate={handleUpdateBlog}
+                    
+                />
+            )}
         </div>
     );
 }
 
 export default Timeline;
+
+
+
