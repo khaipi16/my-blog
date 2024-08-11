@@ -1,7 +1,7 @@
 
 ## Using the site
 - NOTE:
-**   - It may take a few minutes for the site to render as it is deployed on render's free tier
+**It may take a few minutes for the site to render as it is deployed on render's free tier
      hence the free instances spins down after period of inactivity.**
 - User can register and can post up to 5 blogs
 - User can see everyone's blogs, but can only update/delete their own blogs
