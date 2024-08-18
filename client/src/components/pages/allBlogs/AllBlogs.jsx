@@ -37,11 +37,30 @@ const AllBlogs = () => {
        'Spring',
        'React',
        'Angular',
-       'Code Challenge',
        'CSS',
        'SQL',
        'Database', 
-       'Cloud'
+       'Cloud',
+       'Data Structure',
+       'Arrays/Hashing',
+       'Strings',
+       'Two-Pointers',
+       'Sliding Window',
+       'Stacks',
+       'Binary Search',
+       'Linked List',
+       'Trees',
+       'Heap/Priority Queue',
+       'Backtracking',
+       'Tries',
+       'Graphs',
+       'Advanced Graphs',
+       'Greedy',
+       '1-D Dynamic Programming',
+       '2-D Dyanmic Programming',
+       'Intervals',
+       'Math & Geometry',
+       'Bit Manipulation'
     ];
 
     const handleExpandCategory = (category) => (event, isExpanded) => {
