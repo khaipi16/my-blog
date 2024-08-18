@@ -38,8 +38,9 @@ export const Home = () => {
                     <Typography className={styles.profileName} variant="h6">Cin Khai</Typography>
                     <Typography variant="body2" className={styles.intro}>
                         Hello! My name is Khai, and welcome to my blog. I’m a Software Engineer with a background in Physics.
-                            Here, you’ll find posts about programming, design, bugs, and various topics related to my career. 
-                            Writing these blogs helps me better retain and internalize what I’ve learned, and I hope they can be helpful to you too.
+                            I wanted to start documentating all that I learn during my career so you’ll find posts about programming, design, bugs, and various related topics. 
+                            Writing these blogs helps me better retain and internalize what I’ve learned.
+                            This is an interactive full-stack app with python backend and react frontend.
                     </Typography>
                     <Link to={"/about"}>
                         <Button className={styles.readMore} variant="outlined" color="primary">
