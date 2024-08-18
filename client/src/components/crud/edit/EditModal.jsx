@@ -34,6 +34,26 @@ const EditModal = ({ open, handleClose, blogData, handleUpdate }) => {
         { value: 'SQL', label: 'SQL' },
         { value: 'Database', label: 'Database' },
         { value: 'Cloud', label: 'Cloud' },
+        { value: 'Data Structure' , label: 'Data Structure' },
+        { value: 'Arrays/Hashing', label: 'Arrays/Hashing' },
+        { value: 'Strings', label: 'Strings' },
+        { value: 'Two-Pointers', label: 'Two-Pointers' },
+        { value: 'Sliding Window', label: 'Sliding Window' },
+        { value: 'Stacks', label: 'Stacks'},
+        { value: 'Binary Search', label: 'Binary Search' },
+        { value: 'Linked List', label: 'Linked List' },
+        { value: 'Trees', label: 'Trees' },
+        { value: 'Heap/Priority Queue', label: 'Heap/Priority Queue' },
+        { value: 'Backtracking', label: 'Backtracking' },
+        { value: 'Tries', label: 'Tries' },
+        { value: 'Graphs', label: 'Graphs' },
+        { value: 'Advanced Graphs', label: 'Advanced Graphs' },
+        { value: 'Greedy', label: 'Greedy' },
+        { value: '1-D Dynamic Programming', label: '1-D Dynamic Programming' },
+        { value: '2-D Dyanmic Programming', label: '2-D Dyanmic Programming' },
+        { value: 'Intervals', label: 'Intervals' },
+        { value: 'Math & Geometry', label: 'Math & Geometry' },
+        { value: 'Bit Manipulation', label: 'Bit Manipulation' }
     ];
 
     const handleSave = () => {
